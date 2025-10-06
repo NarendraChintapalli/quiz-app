@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Result</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .correct {
+      background-color: #c8e6c9;
+      border-left: 5px solid #2e7d32;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .wrong {
+      background-color: #ffcdd2;
+      border-left: 5px solid #c62828;
+      padding: 10px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Your Score</h1>
+    <h2 id="scoreDisplay"></h2>
+    <div id="reviewSection"></div>
+    <div class="center">
+      <button onclick="window.location.href='index.html'">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const result = JSON.parse(localStorage.getItem("quizResult"));
+    if (result) {
+      document.getElementById("scoreDisplay").innerText =
+        `You scored ${result.score} out of ${result.total}`;
+
+      const reviewDiv = document.getElementById("reviewSection");
+
+      result.questions.forEach((q, i) => {
+        const userAns = result.userAnswers[i];
+        const isCorrect = q.correctOption === userAns;
+
+        const div = document.createElement("div");
+        div.classList.add(isCorrect ? "correct" : "wrong");
+
+        div.innerHTML = `
+          <h4>${q.question}</h4>
+          <p><strong>Your Answer:</strong> ${userAns ? q["option" + userAns] : "Not Answered"}</p>
+          <p><strong>Correct Answer:</strong> ${q["option" + q.correctOption]}</p>
+        `;
+
+        reviewDiv.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
